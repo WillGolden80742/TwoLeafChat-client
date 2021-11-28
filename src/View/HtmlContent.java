@@ -60,13 +60,13 @@ public class HtmlContent {
     private boolean isFile(String name, String format) {
         String fileFormat = format.split("[.]")[1];
         String hash = format.split("[.]")[0];
-        boolean isFile = new File("Files\\Received\\" + fileFormat + "\\" + hash + "\\" + name).isFile();
+        boolean isFile = new File("Files/Received/" + fileFormat + "/" + hash + "/" + name).isFile();
         return isFile;
     }
 
     private String midiaAttachment(String html, String name, String format) {
         String icon = fileIcon;
-        String path = new File("Images\\").getAbsoluteFile().toURI().toString();
+        String path = new File("Images/").getAbsoluteFile().toURI().toString();
         boolean isAudio = isAudio(format);
         boolean isImage = isImage(format);
         boolean isVideo = isVideo(format);
@@ -74,7 +74,7 @@ public class HtmlContent {
         if (isAudio) {
             icon = audioIcon;
         } else if (isImage) {
-            icon = imageIcon;
+            icon = imageIcon;          
         } else if (isVideo) {
             icon = videoIcon;
         }
@@ -89,7 +89,7 @@ public class HtmlContent {
         String hash = hashName.split("[.]")[0];
         String format = hashName.split("[.]")[1];
         String name = nomeArquivo + "." + format;
-        String filePath = new File("Files\\Received\\" + format + "\\" + hash + "\\").getAbsoluteFile().toURI().toString();
+        String filePath = new File("Files/Received/" + format + "/" + hash + "/").getAbsoluteFile().toURI().toString();
         if (isFile(name, hashName) && isImage(format)) {
             html = "<div style=\"background-color:#458f57;\"><center> <a href=\"file:/#name/#hashName\" ><img src='" + filePath + "/" + name + "' width=\"#widthImg\" /></a></center></div>";
         } else {

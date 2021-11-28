@@ -6,7 +6,7 @@
 package View;
 
 import Model.bean.Contact;
-import ConnectionFactory.Server;
+import ConnectionFactory.ServerChat;
 import LookAndFeel.LAF;
 import Model.bean.Arquivos;
 import Model.bean.Authenticated;
@@ -89,11 +89,12 @@ public final class Chat extends javax.swing.JFrame implements ActionListener {
     // Messages 
     private List<Message> currentMessagesList;
     // Notificações
-    private final String fileMessage = new File("src\\Images\\chat.png").getAbsolutePath();
+    private final String fileMessage = new File("src/Images/chat.png").getAbsolutePath();
     //If the icon is a file
-    private final Image image = Toolkit.getDefaultToolkit().createImage(fileMessage);
-    private final TrayIcon notifications = new TrayIcon(image, "Chat");
-    private final SystemTray tinyChat = SystemTray.getSystemTray();
+    private Image image;
+    private TrayIcon notifications;
+    private SystemTray tinyChat;
+    private String osName = System.getProperty("os.name");
 
     public Chat() {
         initComponents();
@@ -112,8 +113,13 @@ public final class Chat extends javax.swing.JFrame implements ActionListener {
         caixaDeEntrada.setToolTipText(null);
         disableHorizontalScroll(caixaDeEntradaScroll);
         disableHorizontalScroll(campoMensagemScroll);
-        notifications.addActionListener(this);
-        startDisplayTray();
+        if (!osName.equals("Linux")) {
+            image = Toolkit.getDefaultToolkit().createImage(fileMessage);
+            notifications = new TrayIcon(image, "Chat");
+            tinyChat = SystemTray.getSystemTray();
+            notifications.addActionListener(this);
+            startDisplayTray();
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -602,10 +608,10 @@ public final class Chat extends javax.swing.JFrame implements ActionListener {
                         send.setEnabled(false);
                     }
                 } else {
-                    if (campoMensagem.getText().length() <= 500) {
+                    if (campoMensagem.getText().length() <= 5000) {
                         enviarMensagem();
-                    } else if (campoMensagem.getText().length() <= 502) {
-                        campoMensagem.setText(campoMensagem.getText().substring(0, 500));
+                    } else if (campoMensagem.getText().length() <= 5002) {
+                        campoMensagem.setText(campoMensagem.getText().substring(0, 5000));
                         enviarMensagem();
                     }
                 }
@@ -679,16 +685,17 @@ public final class Chat extends javax.swing.JFrame implements ActionListener {
                 String name = splitURLName;
                 String[] splitFormat = name.split("[.]");
                 String format = splitFormat[splitFormat.length - 1];
-                String pathNameDestination = new File("Files\\Received\\" + format + "\\" + hash + "\\" + name).getAbsolutePath();
+                String pathNameDestination = new File("Files/Received/" + format + "/" + hash + "/" + name).getAbsolutePath();
+                String path = new File("Files/Received/" + format + "/" + hash).getAbsolutePath();
                 boolean isFile = new File(pathNameDestination).isFile();
-                boolean isExtracted = new File("google\\chrome.exe").isFile();
+                boolean isExtracted = new File("google/chrome.exe").isFile();
                 if (!isFile) {
                     downloadFile(hashName, name);
                 } else {
                     boolean isNotSupportedAudio = format.toLowerCase().equals("ogg") || format.toLowerCase().equals("wav");
                     if (isAudio(hashName)) {
                         playAudio(pathNameDestination, name);
-                    } else if (isExtracted && isVideo(hashName) || isExtracted && isNotSupportedAudio) {
+                    } else if (isExtracted && isVideo(hashName) && !osName.equals("Linux") || isExtracted && isNotSupportedAudio && !osName.equals("Linux")) {
                         int x = getLocation().x;
                         int y = getLocation().y;
                         int height = caixaDeEntradaScroll.getHeight();
@@ -706,7 +713,7 @@ public final class Chat extends javax.swing.JFrame implements ActionListener {
                         }
                     } else {
                         try {
-                            Runtime.getRuntime().exec("explorer.exe \"" + pathNameDestination + "\"");
+                            Runtime.getRuntime().exec(((osName.equals("Linux")) ? "nautilus" : "explorer.exe") + " " + path);
                         } catch (IOException ex) {
                             Logger.getLogger(Chat.class.getName()).log(Level.SEVERE, null, ex);
                         }
@@ -775,15 +782,22 @@ public final class Chat extends javax.swing.JFrame implements ActionListener {
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
         String[] options = {"Minimizar", "Encerrar"};
-        if (JOptionPane.showOptionDialog(null, "Deseja apenas minimizar ou encerrar?", "Encerrar ou Minimizar?", WIDTH, HEIGHT, null, options, nickName) == 0) {
-            messagesNotReceivedAllContactsThread = new Thread(MessagesNotReceivedAllContacts);
-            messagesNotReceivedAllContactsThread.start();
-            try {
-                messagesNotReceivedThread.stop();
-            } catch (NullPointerException ex) {
+        if (!osName.equals("Linux")) {
+            if (JOptionPane.showOptionDialog(null, "Deseja apenas minimizar ou encerrar?", "Encerrar ou Minimizar?", WIDTH, HEIGHT, null, options, nickName) == 0) {
+                messagesNotReceivedAllContactsThread = new Thread(MessagesNotReceivedAllContacts);
+                messagesNotReceivedAllContactsThread.start();
+                try {
+                    messagesNotReceivedThread.stop();
+                } catch (NullPointerException ex) {
+                }
+            } else {
+                ServerChat server = new ServerChat();
+                Communication communication = new Communication("LOGOUT");
+                server.outPut(communication);
+                System.exit(0);
             }
         } else {
-            Server server = new Server();
+            ServerChat server = new ServerChat();
             Communication communication = new Communication("LOGOUT");
             server.outPut(communication);
             System.exit(0);
@@ -853,12 +867,12 @@ public final class Chat extends javax.swing.JFrame implements ActionListener {
 
     private void sendMessageControl() {
         int count = campoMensagem.getText().length();
-        if (count > 0 && count <= 500 || selectedFile) {
+        if (count > 0 && count <= 5000 || selectedFile) {
             send.setEnabled(true);
         } else if (send.isEnabled()) {
             send.setEnabled(false);
         }
-        characters.setText(count + "/500");
+        characters.setText(count + "/5000");
     }
 
     public void addCaixadeEntrada(String value) {
@@ -898,7 +912,7 @@ public final class Chat extends javax.swing.JFrame implements ActionListener {
                 if (currenContact != null) {
                     messageRead = true;
                     String contactNickName = currenContact.getNickName();
-                    Server server = new Server();
+                    ServerChat server = new ServerChat();
                     Communication communication = new Communication("MESSAGENOTRECEIVED");
                     communication.setParam("nickName", nickName);
                     communication.setParam("contactNickName", contactNickName);
@@ -941,7 +955,7 @@ public final class Chat extends javax.swing.JFrame implements ActionListener {
         @Override
         public void run() {
             while (true) {
-                Server server = new Server();
+                ServerChat server = new ServerChat();
                 Communication communication = new Communication("MESSAGENOTRECEIVEDALLCONTACTS");
                 communication.setParam("nickName", nickName);
                 communication = server.outPut_inPut(communication);
@@ -1011,7 +1025,7 @@ public final class Chat extends javax.swing.JFrame implements ActionListener {
                 // LOADING SET 
                 String contactNickName = currenContact.getNickName();
                 String contactName = currenContact.getNome();
-                Server server = new Server();
+                ServerChat server = new ServerChat();
                 Communication communication = new Communication("MESSAGE");
                 communication.setParam("nickName", nickName);
                 communication.setParam("contactNickName", contactNickName);
@@ -1062,7 +1076,7 @@ public final class Chat extends javax.swing.JFrame implements ActionListener {
 
     public void contacts() {
         try {
-            Server server = new Server();
+            ServerChat server = new ServerChat();
             Communication communication = new Communication("READ");
             communication.setParam("nickName", nickName);
             communication = server.outPut_inPut(communication);
@@ -1099,7 +1113,7 @@ public final class Chat extends javax.swing.JFrame implements ActionListener {
 
     private void setProfileIcon(String nickName, JLabel label, String sizeFolder) {
         boolean isFile = new File("Files/Contacts/ProfilePic/" + sizeFolder + "/" + nickName + "/" + nickName + ".jpg").isFile();
-        String imgFile = new File("Images\\profile" + sizeFolder + ".png").toString();
+        String imgFile = new File("Images/profile" + sizeFolder + ".png").toString();
         try {
             if (isFile) {
                 imgFile = new File("Files/Contacts/ProfilePic/" + sizeFolder + "/" + nickName + "/" + nickName + ".jpg").toString();
@@ -1109,6 +1123,17 @@ public final class Chat extends javax.swing.JFrame implements ActionListener {
             BufferedImage bi = ImageIO.read(is);
             label.setIcon(new ImageIcon(bi));
         } catch (IOException | NullPointerException ex) {
+            imgFile = new File("Images/profile" + sizeFolder + ".png").toString();
+            byte[] imageBytes;
+            try {
+                imageBytes = java.nio.file.Files.readAllBytes(Paths.get(imgFile));
+                InputStream is = new ByteArrayInputStream(imageBytes);
+                BufferedImage bi = ImageIO.read(is);
+                label.setIcon(new ImageIcon(bi));
+            } catch (IOException ex1) {
+                Logger.getLogger(Chat.class.getName()).log(Level.SEVERE, null, ex1);
+            }
+
             System.out.print("Não localizada imagem!");
         }
     }
@@ -1122,12 +1147,12 @@ public final class Chat extends javax.swing.JFrame implements ActionListener {
         public void run() {
             TreatFiles file = currentFile;
             Message message = msg;
-            Server server = new Server();
+            ServerChat server = new ServerChat();
             Communication communication;
             communication = new Communication("CHECKFILE");
             String hashName = "";
             clearCurrenteFile();
-            characters.setText("000/500");
+            characters.setText("000/5000");
             campoMensagem.setText("");
             send.setEnabled(false);
             // SEND MESSAGE 
@@ -1195,7 +1220,7 @@ public final class Chat extends javax.swing.JFrame implements ActionListener {
             // DOWNLOAD 
             try {
                 // Abrir conexão socket
-                Server server = new Server();
+                ServerChat server = new ServerChat();
                 // Instanciando objeto de comunicação com o servidor
                 Communication communication = new Communication("DOWNLOADFILE");
                 //Instanciando objeto que receber propriedade dos arquivo
@@ -1246,7 +1271,7 @@ public final class Chat extends javax.swing.JFrame implements ActionListener {
             // DELETE
             loadingLabel.setIcon(new ImageIcon(getClass().getResource("/Images/loading.gif")));
             // DELETE 
-            Server server = new Server();
+            ServerChat server = new ServerChat();
             Communication communication = new Communication("DELETEMESSAGE");
             communication.setParam("idMessage", idDeleteThread);
             communication.setParam("msgTo", currenContact.getNickName());

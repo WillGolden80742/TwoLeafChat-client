@@ -5,7 +5,7 @@
  */
 package View;
 
-import ConnectionFactory.Server;
+import ConnectionFactory.ServerChat;
 import LookAndFeel.LAF;
 import Model.bean.TreatFiles;
 import Threads.CreateNewAccount;
@@ -14,7 +14,6 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.Scanner;
 import java.util.logging.Level;
@@ -196,7 +195,7 @@ public class SingUP extends javax.swing.JFrame {
                     .addComponent(nickName)
                     .addComponent(logar, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(name))
-                .addContainerGap(88, Short.MAX_VALUE))
+                .addContainerGap(99, Short.MAX_VALUE))
             .addComponent(messageLogin, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
@@ -288,12 +287,8 @@ public class SingUP extends javax.swing.JFrame {
     }//GEN-LAST:event_nameKeyReleased
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
-        try {
-            new Login().setVisible(true);
-            dispose();
-        } catch (IOException | ClassNotFoundException ex) {
-            Logger.getLogger(SingUP.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        new BiometricServer().getLogin().setVisible(true);
+        dispose();
     }//GEN-LAST:event_formWindowClosing
 
     private void cadastrar() {
@@ -328,32 +323,8 @@ public class SingUP extends javax.swing.JFrame {
     }
 
     private int checkNickName() {
-        Server server;
-
-        File myObj = new File("server.ini");
-        Scanner myReader;
-        String host = "";
-        int port = 0;
-        try {
-            myReader = new Scanner(myObj);
-            int cont = 0;
-            while (myReader.hasNextLine()) {
-
-                String data = myReader.nextLine();
-                if (cont == 0) {
-                    data = data.replaceAll(" ", "").split(":")[1];
-                    host = data;
-                } else if (cont == 1) {
-                    data = data.replaceAll(" ", "").split(":")[1];
-                    port = Integer.parseInt(data);
-                }
-                cont++;
-            }
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
-        }        
+        ServerChat server = new ServerChat();      
         int i;
-        server = new Server(host, port);
         Communication message = new Communication("CHECKCLIENT");
         message.setParam("nickName", nickName.getText());
         try {
