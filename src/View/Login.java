@@ -24,7 +24,7 @@ public class Login extends javax.swing.JFrame {
         setIconTop();
         setLocation(500, 250);
         setLaf();
-        setTitle("AgroMinimal");
+        setTitle("TwoLeaf");
     }
 
     public void setMessageLogin (String t) {
@@ -107,7 +107,7 @@ public class Login extends javax.swing.JFrame {
         jLabel1.setToolTipText("nickname");
 
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/agro.png"))); // NOI18N
+        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/chat.png"))); // NOI18N
 
         messageLogin.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         messageLogin.setForeground(new java.awt.Color(255, 51, 0));
