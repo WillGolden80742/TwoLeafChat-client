@@ -50,6 +50,7 @@ public class CodePanel extends javax.swing.JFrame {
         port = new javax.swing.JLabel();
         ip = new javax.swing.JLabel();
 
+        setResizable(false);
         addWindowFocusListener(new java.awt.event.WindowFocusListener() {
             public void windowGainedFocus(java.awt.event.WindowEvent evt) {
             }

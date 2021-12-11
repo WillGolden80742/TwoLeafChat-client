@@ -11,6 +11,7 @@ import Model.bean.Device;
 import View.BiometricServer;
 import View.CodePanel;
 import View.Chat;
+import View.Loading;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -86,51 +87,57 @@ public class TreatAuthentication implements Runnable {
         String code = new CodePanel().codeAuth;
         String codeMobile = (String) communication.getParam("CODE");
         System.out.println(code + " : " + codeMobile);
-        if (new CodePanel().isCad()) {
-            switch (op) {
-                case "BIOMETRIC":
-                    if (isAuth() == false) {
-                        if (!code.equals("") && codeMobile.equals(code)) {
-                            String androidID = (String) communication.getParam("ANDROIDID");
-                            reply = new Communication("BIOMETRIC");
-                            reply.setParam("ANDROIDID", androidID);
-                            Server server = new Server(false);
-                            reply = server.outPut_inPut(reply);
-                            if (((String) reply.getParam("BIOMETRICREPLY")).equals("OK")) {
-                                this.welcome = (String) reply.getParam("WELCOME");
-                                reply.setParam("BIOMETRICREPLY", welcome);
-                                Authenticated auth = new Authenticated();
-                                auth.setLogin((String) reply.getParam("NICKNAME"));
-                                new Chat().setVisible(true);
-                                BiometricServer.getLogin().setVisible(false);
-                                setAuth(true);
-                            } else {
-                                loginReply = (String) reply.getParam("BIOMETRICREPLY");
-                                System.out.println("login reply : " + loginReply);
-                                System.out.println("code : " + new CodePanel().codeAuth);
-                                BiometricServer.getLogin().setMessageLogin(loginReply);
-                            }
-
-                        } else if (code.equals("")) {
-                            loginReply = "Clique em biometria para gerar código";
-                            BiometricServer.getLogin().setMessageLogin(loginReply);
-                            reply.setParam("BIOMETRICREPLY", loginReply);
-                        } else if (!codeMobile.equals(code)) {
-                            loginReply = "Código inválido";
-                            BiometricServer.getLogin().setMessageLogin(loginReply);
-                            reply.setParam("BIOMETRICREPLY", loginReply);
-                        }
-                    } else {
-                        reply.setParam("BIOMETRICREPLY", welcome);
-                    }
-                    break;
-                default:
-                    break;
-            }
+        if (code.equals("")) {
+            loginReply = "Clique em biometria para gerar código";
+            BiometricServer.getLogin().setMessageLogin(loginReply);
+            reply.setParam("BIOMETRICREPLY", loginReply);
+        } else if (!codeMobile.equals(code)) {
+            loginReply = "Código inválido";
+            BiometricServer.getLogin().setMessageLogin(loginReply);
+            reply.setParam("BIOMETRICREPLY", loginReply);
         } else {
-            switch (op) {
-                case "BIOMETRIC":
-                    if (!code.equals("") && codeMobile.equals(code)) {
+            if (new CodePanel().isCad()) {
+                switch (op) {
+                    case "BIOMETRIC":
+                        if (isAuth() == false) {
+                            if (!code.equals("") && codeMobile.equals(code)) {
+                                String androidID = (String) communication.getParam("ANDROIDID");
+                                reply = new Communication("BIOMETRIC");
+                                reply.setParam("ANDROIDID", androidID);
+                                Server server = new Server(false);
+                                reply = server.outPut_inPut(reply);
+                                if (((String) reply.getParam("BIOMETRICREPLY")).equals("OK")) {
+                                    this.welcome = (String) reply.getParam("WELCOME");
+                                    System.out.print(this.welcome);
+                                    reply.setParam("BIOMETRICREPLY", welcome);
+                                    Authenticated auth = new Authenticated();
+                                    auth.setLogin((String) reply.getParam("NICKNAME"));
+                                    System.out.print(auth.getLogin());
+                                    try {
+                                        new Thread().sleep(1000);
+                                    } catch (InterruptedException ex) {
+                                    }
+                                    new Loading().setVisible(true);
+                                    BiometricServer.getLogin().setVisible(false);
+                                    setAuth(true);
+                                } else {
+                                    loginReply = (String) reply.getParam("BIOMETRICREPLY");
+                                    System.out.println("login reply : " + loginReply);
+                                    System.out.println("code : " + new CodePanel().codeAuth);
+                                    BiometricServer.getLogin().setMessageLogin(loginReply);
+                                }
+
+                            }
+                        } else {
+                            reply.setParam("BIOMETRICREPLY", welcome);
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            } else {
+                switch (op) {
+                    case "BIOMETRIC":
                         String androidID = (String) communication.getParam("ANDROIDID");
                         reply = new Communication("CHECKDEVICE");
                         reply.setParam("ANDROIDID", androidID);
@@ -142,9 +149,8 @@ public class TreatAuthentication implements Runnable {
                             new Device().setDeviceID(androidID);
                             JOptionPane.showMessageDialog(null, "Inserido dispositivo :\n" + androidID + " Para salvar alteração clique em atualizar");
                         }
-                    } else {
-                        JOptionPane.showMessageDialog(null, "Código inválido!");
-                    }
+
+                }
             }
         }
         return reply;

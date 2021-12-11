@@ -52,7 +52,7 @@ import java.awt.event.ActionListener;
  */
 public final class Chat extends javax.swing.JFrame implements ActionListener {
 
-    private final Authenticated auth = new Authenticated();
+    private Authenticated auth = new Authenticated();
     private List<Contact> contacts;
     private final String nickName = auth.getLogin();
     private TreatFiles currentFile = new TreatFiles();
@@ -122,6 +122,8 @@ public final class Chat extends javax.swing.JFrame implements ActionListener {
             startDisplayTray();
         }
     }
+
+
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
