@@ -112,11 +112,6 @@ public class TreatAuthentication implements Runnable {
                                     reply.setParam("BIOMETRICREPLY", welcome);
                                     Authenticated auth = new Authenticated();
                                     auth.setLogin((String) reply.getParam("NICKNAME"));
-                                    System.out.print(auth.getLogin());
-                                    try {
-                                        new Thread().sleep(1000);
-                                    } catch (InterruptedException ex) {
-                                    }
                                     new Loading().setVisible(true);
                                     BiometricServer.getLogin().setVisible(false);
                                     setAuth(true);
