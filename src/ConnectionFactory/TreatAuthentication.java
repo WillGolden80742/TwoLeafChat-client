@@ -5,12 +5,12 @@
  */
 package ConnectionFactory;
 
-import ConnectionFactory.ServerChat;
+import ConnectionFactory.Server;
 import Model.bean.Authenticated;
 import Model.bean.Device;
 import View.BiometricServer;
-import View.Chat;
 import View.CodePanel;
+import View.Chat;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -94,7 +94,7 @@ public class TreatAuthentication implements Runnable {
                             String androidID = (String) communication.getParam("ANDROIDID");
                             reply = new Communication("BIOMETRIC");
                             reply.setParam("ANDROIDID", androidID);
-                            ServerChat server = new ServerChat();
+                            Server server = new Server(false);
                             reply = server.outPut_inPut(reply);
                             if (((String) reply.getParam("BIOMETRICREPLY")).equals("OK")) {
                                 this.welcome = (String) reply.getParam("WELCOME");
@@ -134,7 +134,7 @@ public class TreatAuthentication implements Runnable {
                         String androidID = (String) communication.getParam("ANDROIDID");
                         reply = new Communication("CHECKDEVICE");
                         reply.setParam("ANDROIDID", androidID);
-                        ServerChat server = new ServerChat();
+                        Server server = new Server(false);
                         reply = server.outPut_inPut(reply);
                         if ((int) reply.getParam("CHECKDEVICEREPLY") == 1) {
                             JOptionPane.showMessageDialog(null, "Dispositivo já inserido, não é possível inserir novamente!");

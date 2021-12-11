@@ -1,6 +1,5 @@
 package View;
 
-import ConnectionFactory.ServerChat;
 import ConnectionFactory.TreatAuthentication;
 import com.formdev.flatlaf.FlatDarkLaf;
 import java.io.IOException;
@@ -45,7 +44,6 @@ public class BiometricServer {
     }
 
     public static void main(String[] args) {
-        ServerChat sChat = new ServerChat(false); 
         login = new Login();
         login.setVisible(true);
         try {

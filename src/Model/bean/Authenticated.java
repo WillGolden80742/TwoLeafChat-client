@@ -5,14 +5,15 @@
  */
 package Model.bean;
 
+import java.io.Serializable;
+
 /**
  *
  * @author William
  */
-public class Authenticated {
+public class Authenticated implements Serializable {
 
-    private static String login;
-
+    private static String login = "";
 
     public String getLogin() {
         return login;

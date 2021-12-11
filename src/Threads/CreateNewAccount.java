@@ -5,7 +5,7 @@
  */
 package Threads;
 
-import ConnectionFactory.ServerChat;
+import ConnectionFactory.Server;
 import Model.bean.Cripto;
 import View.Login;
 import static java.awt.Color.GREEN;
@@ -17,7 +17,7 @@ import util.Communication;
  */
 public class CreateNewAccount implements Runnable {
 
-    private ServerChat server;
+    private Server server;
     private String replyLogin = "";
     private final byte[] picture;
     private final String format;
@@ -36,7 +36,7 @@ public class CreateNewAccount implements Runnable {
     @Override
     public void run() {
         String hashPassword;
-        server = new ServerChat();
+        server = new Server();
         Communication message = new Communication("CREATEACCOUNT");
         hashPassword = new Cripto(nickName + password).getHashMd5();
         try {

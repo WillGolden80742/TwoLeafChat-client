@@ -6,7 +6,7 @@ package ConnectionFactory;
  */
 public class ConnectServer extends javax.swing.JFrame {
 
-    private ServerChat server;
+    private Server server;
 
     public ConnectServer() {
         initComponents();
@@ -73,7 +73,7 @@ public class ConnectServer extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
-       server = new ServerChat(host.getText(),Integer.parseInt(port.getText()));
+       server = new Server(host.getText(),Integer.parseInt(port.getText()));
        setVisible(false);
     }//GEN-LAST:event_okButtonActionPerformed
 

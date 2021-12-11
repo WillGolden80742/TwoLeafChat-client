@@ -1,6 +1,6 @@
 package View;
 
-import ConnectionFactory.ServerChat;
+import ConnectionFactory.Server;
 import LookAndFeel.LAF;
 import Model.bean.Authenticated;
 import Model.bean.Cripto;
@@ -24,13 +24,13 @@ public class Login extends javax.swing.JFrame {
         setIconTop();
         setLocation(500, 250);
         setLaf();
-        setTitle("TwoLeaf");
+        setTitle("AgroMinimal");
     }
 
-    public void setMessageLogin(String t) {
+    public void setMessageLogin (String t) {
         messageLogin.setText(t);
     }
-
+    
     private void setLaf(String theme) {
         if (theme.equals("")) {
             laf = new LAF();
@@ -77,7 +77,6 @@ public class Login extends javax.swing.JFrame {
         biometricLabel = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("TwoLeaf");
         setResizable(false);
 
         logar.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
@@ -108,7 +107,7 @@ public class Login extends javax.swing.JFrame {
         jLabel1.setToolTipText("nickname");
 
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/chat.png"))); // NOI18N
+        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/agro.png"))); // NOI18N
 
         messageLogin.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         messageLogin.setForeground(new java.awt.Color(255, 51, 0));
@@ -240,16 +239,17 @@ public class Login extends javax.swing.JFrame {
     }//GEN-LAST:event_themeLabelMouseClicked
 
     private void biometricLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_biometricLabelMouseClicked
-        codePanel = new CodePanel(getLocation(), true);
+        codePanel = new CodePanel(getLocation(),true);
         codePanel.setVisible(true);
     }//GEN-LAST:event_biometricLabelMouseClicked
+
 
     public void setMessageLoginColor(Color value) {
         messageLogin.setForeground(value);
     }
 
     private void login() {
-        ServerChat server = new ServerChat();
+        Server server = new Server(false);
         String replyLogin;
         String hashPassword;
         Communication message = new Communication("LOGIN");
@@ -271,7 +271,6 @@ public class Login extends javax.swing.JFrame {
     private void setIconTop() {
         this.setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/Images/chat.png")));
     }
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel biometricLabel;

@@ -6,7 +6,7 @@
 package View;
 
 import Model.bean.Contact;
-import ConnectionFactory.ServerChat;
+import ConnectionFactory.Server;
 import LookAndFeel.LAF;
 import Model.bean.Arquivos;
 import Model.bean.Authenticated;
@@ -95,6 +95,7 @@ public final class Chat extends javax.swing.JFrame implements ActionListener {
     private TrayIcon notifications;
     private SystemTray tinyChat;
     private String osName = System.getProperty("os.name");
+    private Server server = new Server();
 
     public Chat() {
         initComponents();
@@ -791,13 +792,13 @@ public final class Chat extends javax.swing.JFrame implements ActionListener {
                 } catch (NullPointerException ex) {
                 }
             } else {
-                ServerChat server = new ServerChat();
+                server = new Server();
                 Communication communication = new Communication("LOGOUT");
                 server.outPut(communication);
                 System.exit(0);
             }
         } else {
-            ServerChat server = new ServerChat();
+            server = new Server();
             Communication communication = new Communication("LOGOUT");
             server.outPut(communication);
             System.exit(0);
@@ -912,7 +913,7 @@ public final class Chat extends javax.swing.JFrame implements ActionListener {
                 if (currenContact != null) {
                     messageRead = true;
                     String contactNickName = currenContact.getNickName();
-                    ServerChat server = new ServerChat();
+                    server = new Server();
                     Communication communication = new Communication("MESSAGENOTRECEIVED");
                     communication.setParam("nickName", nickName);
                     communication.setParam("contactNickName", contactNickName);
@@ -955,7 +956,7 @@ public final class Chat extends javax.swing.JFrame implements ActionListener {
         @Override
         public void run() {
             while (true) {
-                ServerChat server = new ServerChat();
+                server = new Server();
                 Communication communication = new Communication("MESSAGENOTRECEIVEDALLCONTACTS");
                 communication.setParam("nickName", nickName);
                 communication = server.outPut_inPut(communication);
@@ -1025,7 +1026,7 @@ public final class Chat extends javax.swing.JFrame implements ActionListener {
                 // LOADING SET 
                 String contactNickName = currenContact.getNickName();
                 String contactName = currenContact.getNome();
-                ServerChat server = new ServerChat();
+                server = new Server();
                 Communication communication = new Communication("MESSAGE");
                 communication.setParam("nickName", nickName);
                 communication.setParam("contactNickName", contactNickName);
@@ -1076,7 +1077,7 @@ public final class Chat extends javax.swing.JFrame implements ActionListener {
 
     public void contacts() {
         try {
-            ServerChat server = new ServerChat();
+            server = new Server();
             Communication communication = new Communication("READ");
             communication.setParam("nickName", nickName);
             communication = server.outPut_inPut(communication);
@@ -1147,7 +1148,7 @@ public final class Chat extends javax.swing.JFrame implements ActionListener {
         public void run() {
             TreatFiles file = currentFile;
             Message message = msg;
-            ServerChat server = new ServerChat();
+            server = new Server();
             Communication communication;
             communication = new Communication("CHECKFILE");
             String hashName = "";
@@ -1220,7 +1221,7 @@ public final class Chat extends javax.swing.JFrame implements ActionListener {
             // DOWNLOAD 
             try {
                 // Abrir conexão socket
-                ServerChat server = new ServerChat();
+                server = new Server();
                 // Instanciando objeto de comunicação com o servidor
                 Communication communication = new Communication("DOWNLOADFILE");
                 //Instanciando objeto que receber propriedade dos arquivo
@@ -1271,7 +1272,7 @@ public final class Chat extends javax.swing.JFrame implements ActionListener {
             // DELETE
             loadingLabel.setIcon(new ImageIcon(getClass().getResource("/Images/loading.gif")));
             // DELETE 
-            ServerChat server = new ServerChat();
+            server = new Server();
             Communication communication = new Communication("DELETEMESSAGE");
             communication.setParam("idMessage", idDeleteThread);
             communication.setParam("msgTo", currenContact.getNickName());

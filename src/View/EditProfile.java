@@ -5,7 +5,7 @@
  */
 package View;
 
-import ConnectionFactory.ServerChat;
+import ConnectionFactory.Server;
 import LookAndFeel.LAF;
 import Model.bean.Cliente;
 import Model.bean.Device;
@@ -428,8 +428,8 @@ public class EditProfile extends javax.swing.JFrame {
     }
 
     private void searchContact() {
-        ServerChat server;
-        server = new ServerChat();
+        Server server;
+        server = new Server();
         Communication message = new Communication("SEARCHCONTACT");
         message.setParam("nickName", nickName);
         Cliente c;
@@ -446,9 +446,9 @@ public class EditProfile extends javax.swing.JFrame {
 
     private void setProfilePic() {
         ProfilePic profilepic;
-        ServerChat server;
+        Server server;
         try {
-            server = new ServerChat();
+            server = new Server();
             Communication communication = new Communication("PROFILEIMAGE");
             communication.setParam("nickName", nickName);
             communication = server.outPut_inPut(communication);

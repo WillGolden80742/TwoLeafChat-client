@@ -5,7 +5,7 @@
  */
 package View;
 
-import ConnectionFactory.ServerChat;
+import ConnectionFactory.Server;
 import LookAndFeel.LAF;
 import Model.bean.TreatFiles;
 import Threads.CreateNewAccount;
@@ -323,10 +323,10 @@ public class SingUP extends javax.swing.JFrame {
     }
 
     private int checkNickName() {
-        ServerChat server = new ServerChat();      
-        int i;
+        Server server = new Server(false);
         Communication message = new Communication("CHECKCLIENT");
         message.setParam("nickName", nickName.getText());
+        int i = 0;
         try {
             i = (int) server.outPut_inPut(message).getParam("CHECKCLIENTREPLY");
         } catch (NullPointerException ex) {

@@ -5,7 +5,7 @@
  */
 package Threads;
 
-import ConnectionFactory.ServerChat;
+import ConnectionFactory.Server;
 import Model.bean.Device;
 import Model.bean.Cripto;
 import javax.swing.JOptionPane;
@@ -17,7 +17,7 @@ import util.Communication;
  */
 public class EditAccount implements Runnable {
 
-    private ServerChat server;
+    private Server server;
     private String replyLogin = "";
     private final byte[] picture;
     private final String format;
@@ -40,7 +40,7 @@ public class EditAccount implements Runnable {
     @Override
     public void run() {
         String hashPassword;
-        server = new ServerChat();
+        server = new Server();
         hashPassword = new Cripto(nickName + password).getHashMd5();
         Communication message = new Communication("EDITACCOUNT");
         try {

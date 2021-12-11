@@ -5,7 +5,7 @@
  */
 package Threads;
 
-import ConnectionFactory.ServerChat;
+import ConnectionFactory.Server;
 import Model.bean.ProfilePic;
 import Model.bean.TreatFiles;
 import View.Chat;
@@ -47,7 +47,7 @@ public class SaveProfileImage implements Runnable {
     public void run() {
         try {
             ProfilePic profilepic;
-            ServerChat server = new ServerChat();
+            Server server = new Server();
             Communication communication = new Communication("PROFILEIMAGE");
             communication.setParam("nickName", nickName);
             communication = server.outPut_inPut(communication);
