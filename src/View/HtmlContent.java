@@ -46,7 +46,7 @@ public class HtmlContent {
     }
 
     private boolean isImage(String format) {
-        return format.toLowerCase().equals("png") || format.toLowerCase().equals("jpg") || format.toLowerCase().equals("jpge") || format.toLowerCase().equals("gif");
+        return format.toLowerCase().equals("png") || format.toLowerCase().equals("jpg")  || format.toLowerCase().equals("jpeg") || format.toLowerCase().equals("jpge") || format.toLowerCase().equals("gif");
     }
 
     private boolean isAudio(String format) {
