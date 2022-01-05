@@ -64,7 +64,6 @@ public class BiometricServer {
                 System.out.println("Cliente finalizado\n");
             }
         } catch (IOException ex) {
-
             Logger.getLogger(TreatAuthentication.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
